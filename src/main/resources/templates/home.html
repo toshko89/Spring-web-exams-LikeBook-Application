@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/commons::head}"></head>
+<body>
+<header th:replace="~{fragments/commons::nav}"></header>
+<main>
+    <div class="container bg-blur rounded mt-1 mb-4">
+        <div class="row mt-1 mb-2">
+            <div class="col-6 mt-1 mb-1">
+                <h3 class="mySticky bg-gray text-dark  mb-0 mt-2">My Posts</h3>
+                <h6 class="mySticky bg-gray text-dark  mb-0 mt-0" th:text="| Username: ${@loggedUserSession.getUsername()}|"></h6>
+                <div class="bg-dark rounded m-auto" style="height: 68.5vh; overflow: auto">
+                    <table class="table table-striped table-dark">
+                        <tr th:each="post : ${userPosts}">
+                            <td class="bg-info" scope="row" style="width: 5%">
+                                <img class="mr-2 " src="/img/post-bubble.png" alt="PostBubble" width="30px" height="30px">
+                            </td>
+                            <td style="width: 5%" class="bg-info" th:text="${post.getMood().getMoodName()}">{mood}</td>
+                            <td class="bg-primary" th:text="|${post.likes} likes|" style="width: 15%">{numberOfLikes) likes</td>
+                            <td th:text="${post.content}">{content}</td>
+                            <td style="width: 15%"><a class="btn-danger btn" th:href="@{remove-post/{id}(id=*{post.getId()})}">Remove</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-6 mt-1 mb-1">
+                <h3 class="mySticky bg-gray text-dark  mb-0 mt-2">All Other Posts</h3>
+                <h6 class="mySticky bg-gray text-dark  mb-0 mt-0" th:text="|${otherPosts.size()} total posts|">{otherUsersPostsTotalCount} total posts</h6>
+                <div class="bg-dark rounded m-auto" style="height: 68.5vh; overflow: auto">
+                    <th:block th:each="otherPost : ${otherPosts}">
+                        <br>
+                        <ul class="list-group list-group-horizontal text-dark">
+                            <li class="list-group-item">
+                                <table>
+                                    <tr>
+                                        <td style="width: 15%"><a> {username}: </a></td>
+                                        <td>
+                                            <a th:text="|${otherPost.user.username}|">{content}</a>
+                                        </td>
+                                        <td>
+                                            <a th:text="|${otherPost.content.toString()}|">{content}</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li class="list-group-item bg-gray">
+                                <table>
+                                    <tr>
+                                        <td style="width: 10%" th:text="|Mood: ${otherPost.mood.getMoodName().toString()}|">Mood: {mood}</td>
+                                        <td class="text-primary" th:text="|${otherPost.likes} likes|">{numberOfLikes} likes</td>
+                                        <td><a class="ml-3 text-danger" th:href="@{/like-post/{id}(id=*{otherPost.id})}"><img src="/img/like.png" width="43px" height="40px"></a></td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ul>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/commons::footer}"></footer>
+</body>
+</html>
